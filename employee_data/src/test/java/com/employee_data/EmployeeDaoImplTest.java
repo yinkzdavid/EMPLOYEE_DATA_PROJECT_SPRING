@@ -10,30 +10,39 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import javax.activation.DataSource;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.employee.dao.EmployeeDao;
 import com.employee.entity.Employee;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 /**
  * @author Yinkz
  *
  */
-
-@Sql(scripts= {"classpath:/db/create-table.sql"})
-@ContextConfiguration("classpath:data-context.xml")
+@Sql(scripts= {"classpath:/db/create-table.sql", "classpath:/db/insert-employees.sql"})
+@ContextConfiguration(locations= {"classpath:data-context.xml"})
 @RunWith(SpringRunner.class)
 public class EmployeeDaoImplTest {
 	
+	
+	
 	@Autowired
-	EmployeeDao employeeDaoImpl;
+	private EmployeeDao employeeDaoImpl;
+
 
 	/**
 	 * @throws java.lang.Exception
@@ -49,27 +58,7 @@ public class EmployeeDaoImplTest {
 	public void tearDown() throws Exception {
 	}
 
-	@Test
-	public void dbConnectionTest() throws SQLException {
-		String jdbcUrl = "jdbc:mysql://localhost:3306/employee_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
-		String user = "employee_user";
-		String password = "employee123";
-		String driver = "com.mysql.cj.jdbc.Driver";
-		
-		Connection dbCon = null;
-		
-		try {
-			dbCon = DriverManager.getConnection(jdbcUrl, user, password);
-			assertThat(dbCon).isNotNull();
-		}
-		catch(SQLException sqle) {
-			sqle.printStackTrace();
-			
-		}
-		finally {
-			dbCon.close();
-		}
-	}
+	
 	
 	@Test
 	public void saveEmployeeToDBTest() {
@@ -96,6 +85,18 @@ public class EmployeeDaoImplTest {
 		assertThat(existingEmployee).isNotNull();
 		
 		
+	}
+	
+	@Test
+	public void getEmployeeByEmailTest() {
+		assertThat(employeeDaoImpl).isNotNull();
+		
+		Employee savedEmployee = employeeDaoImpl.getByEmail("jon@mail.com");
+		assertThat(savedEmployee).isNotNull();
+		
+		assertThat(savedEmployee.getEmployeeId()).isEqualTo(5);
+		
+		System.out.println(savedEmployee);
 	}
 
 }
