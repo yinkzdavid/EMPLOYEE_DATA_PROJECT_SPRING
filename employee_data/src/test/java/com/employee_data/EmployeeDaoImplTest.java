@@ -5,29 +5,20 @@ package com.employee_data;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
-import javax.activation.DataSource;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.employee.dao.EmployeeDao;
 import com.employee.entity.Employee;
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 /**
  * @author Yinkz
@@ -97,6 +88,20 @@ public class EmployeeDaoImplTest {
 		assertThat(savedEmployee.getEmployeeId()).isEqualTo(5);
 		
 		System.out.println(savedEmployee);
+	}
+	
+	@Test
+	public void getAllEmployeesTest() {
+		assertThat(employeeDaoImpl).isNotNull();
+		
+		List<Employee> allEmployees = employeeDaoImpl.findAll();
+		
+		assertThat(allEmployees).isNotNull();
+		
+		assertThat(allEmployees).hasSize(5);
+		
+		allEmployees.forEach(System.out::println);
+		
 	}
 
 }

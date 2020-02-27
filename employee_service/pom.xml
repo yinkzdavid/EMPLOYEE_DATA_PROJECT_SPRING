@@ -8,6 +8,12 @@
   <artifactId>employee_service</artifactId>
   <name>Employee Service project</name>
   
+  <properties>
+  	<maven.compiler.source>12</maven.compiler.source>
+  	<maven.compiler.target>12</maven.compiler.target>
+  
+  </properties>
+  
   <dependencies>
 	 <dependency>
 	 <groupId>com.employee</groupId>
